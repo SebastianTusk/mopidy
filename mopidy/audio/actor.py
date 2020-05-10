@@ -328,12 +328,11 @@ class _Handler:
             f"Got ERROR bus message: error={error!r} debug={debug!r}"
         )
 
-        if (error.domain== "gst-resource-error-quark" and error.code == 15) {
+        if (error.domain== "gst-resource-error-quark" and error.code == 15):
             # Gst.ResourceError.NOT_AUTHORIZED = 15
             # skip to next track
             self._about_to_finish_callback()
             return
-        }
 
         # TODO: is this needed?
         self._audio.stop_playback()
