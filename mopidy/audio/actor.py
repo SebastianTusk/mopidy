@@ -328,15 +328,15 @@ class _Handler:
             f"Got ERROR bus message: error={error!r} debug={debug!r}"
         )
 
+        # TODO: is this needed?
+        self._audio.stop_playback()
+
         if (error.domain == "gst-resource-error-quark" and error.code == 15):
             # Gst.ResourceError.NOT_AUTHORIZED = 15
             # skip to next track
-            self._audio._about_to_finish_callback()
             logger.debug("Gst.ResourceError.NOT_AUTHORIZED: skip to next track")
+            self._audio._about_to_finish_callback(True)
             return
-
-        # TODO: is this needed?
-        self._audio.stop_playback()
 
     def on_warning(self, error, debug):
         gst_logger.warning(f"GStreamer warning: {error.message}")
@@ -563,7 +563,7 @@ class Audio(pykka.ThreadingActor):
         gst_logger.debug("Got about-to-finish event.")
         if self._about_to_finish_callback:
             logger.debug("Running about-to-finish callback.")
-            self._about_to_finish_callback()
+            self._about_to_finish_callback(False)
 
     def _on_source_setup(self, element, source):
         gst_logger.debug(

@@ -163,7 +163,7 @@ class PlaybackController:
                 self._start_paused = False
                 self.pause()
 
-    def _on_about_to_finish_callback(self):
+    def _on_about_to_finish_callback(self, skip_track):
         """Callback that performs a blocking actor call to the real callback.
 
         This is passed to audio, which is allowed to call this code from the
@@ -174,13 +174,17 @@ class PlaybackController:
         self.core.actor_ref.ask(
             ProxyCall(
                 attr_path=["playback", "_on_about_to_finish"],
-                args=[],
+                args=[skip_track],
                 kwargs={},
             )
         )
 
-    def _on_about_to_finish(self):
-        logger.info("_on_about_to_finish")
+    def _on_about_to_finish(self, skip_track):
+        if (skip_track):
+            self.next()
+            self.play()
+            return
+
         if self._state == PlaybackState.STOPPED:
             return
 
