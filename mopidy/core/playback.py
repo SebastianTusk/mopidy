@@ -180,6 +180,7 @@ class PlaybackController:
         )
 
     def _on_about_to_finish(self):
+        logger.info("_on_about_to_finish")
         if self._state == PlaybackState.STOPPED:
             return
 
