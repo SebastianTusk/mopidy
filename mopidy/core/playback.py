@@ -264,6 +264,8 @@ class PlaybackController:
 
     def pause(self):
         """Pause playback."""
+        logger.info("Pause disabled.")
+        raise Exception('Pause disabled.')
         backend = self._get_backend(self.get_current_tl_track())
         # TODO: Wrap backend call in error handling.
         if not backend or backend.playback.pause().get():
